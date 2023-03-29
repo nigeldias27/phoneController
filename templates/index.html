@@ -10,6 +10,10 @@
       crossorigin="anonymous"
     ></script>
     <script type="text/javascript" charset="utf-8">
+      var socket = io();
+      socket.on("connect", function () {
+        socket.emit("my_event", { data: "connected to the SocketServer..." });
+      });
       function setup() {
         let cnv = createCanvas(displayWidth, displayHeight);
         cnv.parent("wordle_canvas");
@@ -19,39 +23,13 @@
         background(0, 0, 0);
         fill(255, 255, 255);
         circle(mouseX, mouseY, 200);
+        if (mouseX != 0 && mouseY != 0) {
+          socket.emit("position", { data: { mouseX: mouseX, mouseY: mouseY } });
+        }
       }
-      $(document).ready(function () {
-        //namespace = "/test";
-        var socket = io();
-
-        socket.on("connect", function () {
-          socket.emit("my_event", { data: "connected to the SocketServer..." });
-        });
-
-        socket.on("my_response", function (msg, cb) {
-          $("#log").append(
-            "<br>" +
-              $("<div/>")
-                .text("logs #" + msg.count + ": " + msg.data)
-                .html()
-          );
-          if (cb) cb();
-        });
-        $("form#emit").submit(function (event) {
-          socket.emit("my_event", { data: $("#emit_data").val() });
-          return false;
-        });
-        $("form#broadcast").submit(function (event) {
-          socket.emit("my_broadcast_event", {
-            data: $("#broadcast_data").val(),
-          });
-          return false;
-        });
-        $("form#disconnect").submit(function (event) {
-          socket.emit("disconnect_request");
-          return false;
-        });
-      });
+      function mouseClicked() {
+        socket.emit("clicked", { data: { mouseX: mouseX, mouseY: mouseY } });
+      }
     </script>
   </head>
   <body style="background-color: white">
