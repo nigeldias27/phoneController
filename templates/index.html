@@ -14,53 +14,101 @@
       socket.on("connect", function () {
         socket.emit("my_event", { data: "connected to the SocketServer..." });
       });
+
+      function keyclicked(e) {
+        console.log(e.innerText.toLowerCase());
+        socket.emit("keyboard", {
+          data: { key: e.innerText.toLowerCase() },
+        });
+      }
       function setup() {
         let cnv = createCanvas(displayWidth, displayHeight);
         cnv.parent("wordle_canvas");
         background(0, 0, 0);
       }
+      let value = 255;
+      let count = 0;
       function draw() {
         background(0, 0, 0);
-        fill(255, 255, 255);
+        fill(255, 255, value);
         circle(mouseX, mouseY, 200);
-        if (mouseX != 0 && mouseY != 0) {
-          socket.emit("position", { data: { mouseX: mouseX, mouseY: mouseY } });
+        if (value == 0) {
+          count++;
+          if (count == 20) {
+            value = 255;
+            count == 0;
+          }
+        }
+        if (mouseX - pmouseX != 0 || mouseY - pmouseY != 0) {
+          console.log(mouseX - pmouseX, mouseY - pmouseY);
+          socket.emit("position", {
+            data: { mouseX: mouseX - pmouseX, mouseY: mouseY - pmouseY },
+          });
         }
       }
       function mouseClicked() {
+        console.log("Pressed");
+        if (value === 255) {
+          value = 0;
+        }
+
         socket.emit("clicked", { data: { mouseX: mouseX, mouseY: mouseY } });
       }
     </script>
   </head>
   <body style="background-color: white">
-    <h1 style="background-color: white">Socket</h1>
+    <h1 style="background-color: white">
+      Mouse and Keyboard Controller using Sockets
+    </h1>
     <div
       id="wordle_canvas"
       style="display: flex; justify-content: center"
     ></div>
-    <form id="emit" method="POST" action="#">
-      <input
-        type="text"
-        name="emit_data"
-        id="emit_data"
-        placeholder="Message"
-      />
-      <input type="submit" value="Send Message" />
-    </form>
-    <form id="broadcast" method="POST" action="#">
-      <input
-        type="text"
-        name="broadcast_data"
-        id="broadcast_data"
-        placeholder="Message"
-      />
-      <input type="submit" value="Send Broadcast Message" />
-    </form>
-
-    <form id="disconnect" method="POST" action="#">
-      <input type="submit" value="Disconnect Server" />
-    </form>
-    <h2 style="background-color: white">Logs</h2>
-    <div id="log"></div>
+    <div
+      style="
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        padding-top: 32px;
+      "
+    >
+      <button onclick="keyclicked(this)">Q</button>
+      <button onclick="keyclicked(this)">W</button>
+      <button onclick="keyclicked(this)">E</button>
+      <button onclick="keyclicked(this)">R</button>
+      <button onclick="keyclicked(this)">T</button>
+      <button onclick="keyclicked(this)">Y</button>
+      <button onclick="keyclicked(this)">U</button>
+      <button onclick="keyclicked(this)">I</button>
+      <button onclick="keyclicked(this)">O</button>
+      <button onclick="keyclicked(this)">P</button>
+    </div>
+    <div style="display: flex; flex-direction: row; justify-content: center">
+      <button onclick="keyclicked(this)">A</button>
+      <button onclick="keyclicked(this)">S</button>
+      <button onclick="keyclicked(this)">D</button>
+      <button onclick="keyclicked(this)">F</button>
+      <button onclick="keyclicked(this)">G</button>
+      <button onclick="keyclicked(this)">H</button>
+      <button onclick="keyclicked(this)">J</button>
+      <button onclick="keyclicked(this)">K</button>
+      <button onclick="keyclicked(this)">L</button>
+    </div>
+    <div
+      style="
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        padding-bottom: 32px;
+      "
+    >
+      <button onclick="keyclicked(this)">Z</button>
+      <button onclick="keyclicked(this)">X</button>
+      <button onclick="keyclicked(this)">C</button>
+      <button onclick="keyclicked(this)">V</button>
+      <button onclick="keyclicked(this)">B</button>
+      <button onclick="keyclicked(this)">N</button>
+      <button onclick="keyclicked(this)">M</button>
+    </div>
   </body>
 </html>

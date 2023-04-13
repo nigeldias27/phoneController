@@ -13,12 +13,16 @@ def test_message(message):
     print(message['data'])
 @socket_.on('position')
 def test_message(message):
-    pyautogui.moveTo(message['data']['mouseX'],message['data']['mouseY'])
+    pyautogui.move(message['data']['mouseX'],message['data']['mouseY'])
     print(message['data']['mouseX'],message['data']['mouseY'])
 @socket_.on('clicked')
 def test_message(message):
-    pyautogui.click(x = message['data']['mouseX'],y = message['data']['mouseY'])
+    pyautogui.click()
     print(message['data']['mouseX'],message['data']['mouseY'])
+@socket_.on('keyboard')
+def test_message(message):
+    pyautogui.press(message['data']['key'])
+    print(message['data']['key'])
 
 @socket_.on('connect')
 def connect():
