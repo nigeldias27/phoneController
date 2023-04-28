@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO
+from flask_socketio import send, emit
 import pyautogui
 async_mode = None
 app = Flask(__name__)
@@ -28,4 +29,4 @@ def test_message(message):
 def connect():
     print("Socket connection made")
 if __name__ == '__main__':
-    socket_.run(app, debug=True,port=5002)
+    socket_.run(app, host='192.168.103.84',debug=True,port=5002)
